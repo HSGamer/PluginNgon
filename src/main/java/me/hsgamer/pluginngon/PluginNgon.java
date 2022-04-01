@@ -6,6 +6,7 @@ import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 
 public final class PluginNgon extends BasePlugin {
     private final NgonInv ngonInv = new NgonInv(this);
+    private final NgonRunnable ngonRunnable = new NgonRunnable();
 
     public NgonInv getNgonInv() {
         return ngonInv;
@@ -18,5 +19,11 @@ public final class PluginNgon extends BasePlugin {
         ngonInv.init();
         registerCommand(new NgonCommand(this));
         getLogger().info("Plugin: " + NgonConfig.INSTANCE.getNgon());
+        ngonRunnable.runTaskTimer(this, 0, 20);
+    }
+
+    @Override
+    public void disable() {
+        ngonRunnable.cancel();
     }
 }

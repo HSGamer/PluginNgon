@@ -48,6 +48,10 @@
                                     <pattern>me.hsgamer.hscore</pattern>
                                     <shadedPattern>me.hsgamer.pluginngon.core</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>com.cryptomorin.xseries</pattern>
+                                    <shadedPattern>me.hsgamer.pluginngon.xseries</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
@@ -108,6 +112,11 @@
             <groupId>me.hsgamer</groupId>
             <artifactId>hscore-config-proxy</artifactId>
             <version>${core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>8.7.1</version>
         </dependency>
     </dependencies>
 </project>
