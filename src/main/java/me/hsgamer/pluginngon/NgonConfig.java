@@ -14,6 +14,11 @@ public interface NgonConfig {
         return "Ngon";
     }
 
+    @ConfigPath("ngon")
+    default long getNgonLong() {
+        return 1000L / 20L;
+    }
+
     default String getNgonMessage() {
         return MessageUtils.colorize("&u&lPlugin Ngon");
     }

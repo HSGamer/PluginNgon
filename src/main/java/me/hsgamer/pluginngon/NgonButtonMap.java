@@ -58,7 +58,7 @@ public class NgonButtonMap extends AdvancedButtonMap {
             frameMasks.add(mask);
         });
 
-        AnimatedMask animatedMask = new AnimatedMask("plugin_animated", 1000);
+        AnimatedMask animatedMask = new AnimatedMask("plugin_animated", NgonConfig.INSTANCE.getNgonLong());
         frameMasks.forEach(animatedMask::addChildMasks);
 
         addMask(animatedMask);
