@@ -1,7 +1,7 @@
 package me.hsgamer.pluginngon;
 
 import me.hsgamer.hscore.bukkit.baseplugin.BasePlugin;
-import me.hsgamer.hscore.bukkit.gui.GUIListener;
+import me.hsgamer.hscore.bukkit.gui.BukkitGUIListener;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 
 public final class PluginNgon extends BasePlugin {
@@ -15,7 +15,7 @@ public final class PluginNgon extends BasePlugin {
     @Override
     public void enable() {
         MessageUtils.setPrefix("&8[&6PluginNgon&8] &7");
-        GUIListener.init(this);
+        BukkitGUIListener.init(this);
         ngonInv.init();
         registerCommand(new NgonCommand(this));
         getLogger().info("Plugin: " + NgonConfig.INSTANCE.getNgon());

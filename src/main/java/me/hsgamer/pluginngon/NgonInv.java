@@ -1,7 +1,7 @@
 package me.hsgamer.pluginngon;
 
-import me.hsgamer.hscore.bukkit.gui.GUIDisplay;
-import me.hsgamer.hscore.bukkit.gui.GUIHolder;
+import me.hsgamer.hscore.bukkit.gui.BukkitGUIDisplay;
+import me.hsgamer.hscore.bukkit.gui.BukkitGUIHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NgonInv extends GUIHolder {
+public class NgonInv extends BukkitGUIHolder {
     private final Map<UUID, BukkitTask> updateTasks = new ConcurrentHashMap<>();
 
     public NgonInv(Plugin plugin) {
@@ -22,15 +22,15 @@ public class NgonInv extends GUIHolder {
     }
 
     @Override
-    public GUIDisplay createDisplay(UUID uuid) {
-        GUIDisplay display = super.createDisplay(uuid);
-        updateTasks.put(uuid, Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin(), display::update, 10, 10));
+    public BukkitGUIDisplay newDisplay(UUID uuid) {
+        BukkitGUIDisplay display = super.newDisplay(uuid);
+        updateTasks.put(uuid, Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin(), display::update, 0, 0));
         return display;
     }
 
     @Override
-    public void removeDisplay(UUID uuid) {
-        super.removeDisplay(uuid);
-        Optional.ofNullable(updateTasks.remove(uuid)).ifPresent(BukkitTask::cancel);
+    protected void onRemoveDisplay(BukkitGUIDisplay display) {
+        super.onRemoveDisplay(display);
+        Optional.ofNullable(updateTasks.remove(display.getUniqueId())).ifPresent(BukkitTask::cancel);
     }
 }

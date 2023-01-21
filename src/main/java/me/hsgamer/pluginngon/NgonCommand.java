@@ -12,11 +12,12 @@ import java.util.Collections;
 
 public class NgonCommand extends Command {
     private static final Permission NGON_PERMISSION = new Permission("plugin.ngon", PermissionDefault.OP);
-    private final PluginNgon pluginNgon;
 
     static {
         Bukkit.getPluginManager().addPermission(NGON_PERMISSION);
     }
+
+    private final PluginNgon pluginNgon;
 
     public NgonCommand(PluginNgon pluginNgon) {
         super("pluginngon", "Plugin ngon", "/pluginngon", Collections.singletonList("ngon"));
@@ -30,7 +31,7 @@ public class NgonCommand extends Command {
             MessageUtils.sendMessage(sender, NgonConfig.INSTANCE.getNgonMessage());
             return false;
         }
-        pluginNgon.getNgonInv().createDisplay(((Player) sender).getUniqueId()).init();
+        pluginNgon.getNgonInv().createDisplay(((Player) sender).getUniqueId()).open();
         return true;
     }
 }

@@ -14,7 +14,7 @@
     <description>Plugin Ngon</description>
     <properties>
         <java.version>1.8</java.version>
-        <core.version>4.0.0-SNAPSHOT</core.version>
+        <core.version>4.2.0-SNAPSHOT</core.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -95,7 +95,12 @@
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>
-            <artifactId>hscore-bukkit-gui-common</artifactId>
+            <artifactId>hscore-bukkit-gui</artifactId>
+            <version>${core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.hsgamer</groupId>
+            <artifactId>hscore-minecraft-gui-advanced</artifactId>
             <version>${core.version}</version>
         </dependency>
         <dependency>
@@ -116,7 +121,7 @@
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>8.7.1</version>
+            <version>9.2.0</version>
         </dependency>
     </dependencies>
 </project>

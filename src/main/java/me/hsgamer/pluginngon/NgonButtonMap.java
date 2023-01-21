@@ -1,22 +1,22 @@
 package me.hsgamer.pluginngon;
 
-import me.hsgamer.hscore.bukkit.gui.button.Button;
-import me.hsgamer.hscore.bukkit.gui.button.ButtonMap;
+import me.hsgamer.hscore.bukkit.gui.object.BukkitItem;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
+import me.hsgamer.hscore.minecraft.gui.advanced.AdvancedButtonMap;
+import me.hsgamer.hscore.minecraft.gui.button.Button;
+import me.hsgamer.hscore.minecraft.gui.event.ClickEvent;
+import me.hsgamer.hscore.minecraft.gui.mask.impl.AnimatedMask;
+import me.hsgamer.hscore.minecraft.gui.mask.impl.ButtonMapMask;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class NgonButtonMap extends BukkitRunnable implements ButtonMap {
+public class NgonButtonMap extends AdvancedButtonMap {
     private final List<List<Integer>> slotsList = new ArrayList<>();
-    private int currentIndex = 0;
 
     public NgonButtonMap() {
         slotsList.add(Arrays.asList(2, 3, 4, 5, 11, 15, 20, 21, 22, 23, 29, 38)); // P
@@ -31,59 +31,54 @@ public class NgonButtonMap extends BukkitRunnable implements ButtonMap {
         slotsList.add(Arrays.asList(3, 4, 5, 11, 15, 20, 24, 29, 33, 39, 40, 41)); // O
         slotsList.add(Arrays.asList(2, 6, 11, 12, 15, 20, 22, 24, 29, 32, 33, 38, 42)); // N
         slotsList.add(Collections.emptyList());
+        prepareMasks();
     }
 
-    @Override
-    public Map<Button, List<Integer>> getButtons(UUID uuid) {
-        return Collections.singletonMap(new Button() {
-            @Override
-            public ItemStack getItemStack(UUID uuid) {
-                ItemStack itemStack = new ItemStack(Material.BEDROCK);
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setDisplayName(NgonConfig.INSTANCE.getNgonMessage());
-                itemStack.setItemMeta(itemMeta);
-                return itemStack;
-            }
+    private void prepareMasks() {
+        List<ButtonMapMask> frameMasks = new ArrayList<>();
+        slotsList.forEach(slots -> {
+            ButtonMapMask mask = new ButtonMapMask("plugin");
+            mask.addButton(new Button() {
+                @Override
+                public BukkitItem getItem(UUID uuid) {
+                    ItemStack itemStack = new ItemStack(Material.BEDROCK);
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    itemMeta.setDisplayName(NgonConfig.INSTANCE.getNgonMessage());
+                    itemStack.setItemMeta(itemMeta);
+                    return new BukkitItem(itemStack);
+                }
 
-            @Override
-            public void handleAction(UUID uuid, InventoryClickEvent event) {
-                Player player = Bukkit.getPlayer(uuid);
-                if (player == null) return;
-                MessageUtils.sendMessage(player, NgonConfig.INSTANCE.getNgonMessage());
-            }
-        }, slotsList.get(currentIndex));
-    }
+                @Override
+                public void handleAction(ClickEvent event) {
+                    Player player = Bukkit.getPlayer(event.getViewerID());
+                    if (player == null) return;
+                    MessageUtils.sendMessage(player, NgonConfig.INSTANCE.getNgonMessage());
+                }
+            }, slots);
+            frameMasks.add(mask);
+        });
 
-    @Override
-    public void init() {
-        runTaskTimer(JavaPlugin.getProvidingPlugin(getClass()), 20, 20);
-    }
+        AnimatedMask animatedMask = new AnimatedMask("plugin_animated", 1000);
+        frameMasks.forEach(animatedMask::addChildMasks);
 
-    @Override
-    public void stop() {
-        cancel();
-    }
-
-    @Override
-    public void run() {
-        currentIndex = (currentIndex + 1) % slotsList.size();
+        addMask(animatedMask);
     }
 
     @Override
     public Button getDefaultButton(UUID uuid) {
         return new Button() {
             @Override
-            public ItemStack getItemStack(UUID uuid) {
+            public BukkitItem getItem(UUID uuid) {
                 ItemStack itemStack = new ItemStack(Material.GRASS_BLOCK);
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 itemMeta.setDisplayName(NgonConfig.INSTANCE.getNgonMessage());
                 itemStack.setItemMeta(itemMeta);
-                return itemStack;
+                return new BukkitItem(itemStack);
             }
 
             @Override
-            public void handleAction(UUID uuid, InventoryClickEvent event) {
-                Player player = Bukkit.getPlayer(uuid);
+            public void handleAction(ClickEvent event) {
+                Player player = Bukkit.getPlayer(event.getViewerID());
                 if (player == null) return;
                 MessageUtils.sendMessage(player, NgonConfig.INSTANCE.getNgonMessage());
             }
