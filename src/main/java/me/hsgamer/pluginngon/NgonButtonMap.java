@@ -17,8 +17,10 @@ import java.util.*;
 
 public class NgonButtonMap extends AdvancedButtonMap {
     private final List<List<Integer>> slotsList = new ArrayList<>();
+    private final NgonConfig config;
 
-    public NgonButtonMap() {
+    public NgonButtonMap(NgonConfig config) {
+        this.config = config;
         slotsList.add(Arrays.asList(2, 3, 4, 5, 11, 15, 20, 21, 22, 23, 29, 38)); // P
         slotsList.add(Arrays.asList(2, 11, 20, 29, 38, 39, 40, 41, 42)); // L
         slotsList.add(Arrays.asList(2, 6, 11, 15, 20, 24, 29, 33, 39, 40, 41)); // U
@@ -43,7 +45,7 @@ public class NgonButtonMap extends AdvancedButtonMap {
                 public BukkitItem getItem(UUID uuid) {
                     ItemStack itemStack = new ItemStack(Material.BEDROCK);
                     ItemMeta itemMeta = itemStack.getItemMeta();
-                    itemMeta.setDisplayName(NgonConfig.INSTANCE.getNgonMessage());
+                    itemMeta.setDisplayName(config.getNgonMessage());
                     itemStack.setItemMeta(itemMeta);
                     return new BukkitItem(itemStack);
                 }
@@ -52,13 +54,13 @@ public class NgonButtonMap extends AdvancedButtonMap {
                 public void handleAction(ClickEvent event) {
                     Player player = Bukkit.getPlayer(event.getViewerID());
                     if (player == null) return;
-                    MessageUtils.sendMessage(player, NgonConfig.INSTANCE.getNgonMessage());
+                    MessageUtils.sendMessage(player, config.getNgonMessage());
                 }
             }, slots);
             frameMasks.add(mask);
         });
 
-        AnimatedMask animatedMask = new AnimatedMask("plugin_animated", NgonConfig.INSTANCE.getNgonLong());
+        AnimatedMask animatedMask = new AnimatedMask("plugin_animated", config.getNgonLong());
         frameMasks.forEach(animatedMask::addChildMasks);
 
         addMask(animatedMask);
@@ -71,7 +73,7 @@ public class NgonButtonMap extends AdvancedButtonMap {
             public BukkitItem getItem(UUID uuid) {
                 ItemStack itemStack = new ItemStack(Material.GRASS_BLOCK);
                 ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setDisplayName(NgonConfig.INSTANCE.getNgonMessage());
+                itemMeta.setDisplayName(config.getNgonMessage());
                 itemStack.setItemMeta(itemMeta);
                 return new BukkitItem(itemStack);
             }
@@ -80,7 +82,7 @@ public class NgonButtonMap extends AdvancedButtonMap {
             public void handleAction(ClickEvent event) {
                 Player player = Bukkit.getPlayer(event.getViewerID());
                 if (player == null) return;
-                MessageUtils.sendMessage(player, NgonConfig.INSTANCE.getNgonMessage());
+                MessageUtils.sendMessage(player, config.getNgonMessage());
             }
         };
     }

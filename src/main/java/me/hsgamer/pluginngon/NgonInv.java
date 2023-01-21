@@ -14,10 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NgonInv extends BukkitGUIHolder {
     private final Map<UUID, BukkitTask> updateTasks = new ConcurrentHashMap<>();
 
-    public NgonInv(Plugin plugin) {
+    public NgonInv(Plugin plugin, NgonConfig config) {
         super(plugin);
-        setTitleFunction(uuid -> NgonConfig.INSTANCE.getNgonMessage());
-        setButtonMap(new NgonButtonMap());
+        setTitleFunction(uuid -> config.getNgonMessage());
+        setButtonMap(new NgonButtonMap(config));
         setSize(45);
     }
 

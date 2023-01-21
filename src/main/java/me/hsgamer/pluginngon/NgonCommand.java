@@ -28,7 +28,7 @@ public class NgonCommand extends Command {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (!testPermissionSilent(sender) || !(sender instanceof Player)) {
-            MessageUtils.sendMessage(sender, NgonConfig.INSTANCE.getNgonMessage());
+            MessageUtils.sendMessage(sender, pluginNgon.getNgonConfig().getNgonMessage());
             return false;
         }
         pluginNgon.getNgonInv().createDisplay(((Player) sender).getUniqueId()).open();
