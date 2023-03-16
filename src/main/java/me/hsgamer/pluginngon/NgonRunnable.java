@@ -3,6 +3,7 @@ package me.hsgamer.pluginngon;
 import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.messages.ActionBar;
 import com.cryptomorin.xseries.messages.Titles;
+import me.hsgamer.hscore.bukkit.utils.ColorUtils;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,8 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class NgonRunnable extends BukkitRunnable {
     private final String[] messages = {
-            MessageUtils.colorize("&6Plugin"),
-            MessageUtils.colorize("&cNgon")
+            ColorUtils.colorize("&6Plugin"),
+            ColorUtils.colorize("&cNgon")
     };
     private int index = 0;
 

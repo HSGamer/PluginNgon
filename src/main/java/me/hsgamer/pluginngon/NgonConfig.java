@@ -1,5 +1,6 @@
 package me.hsgamer.pluginngon;
 
+import me.hsgamer.hscore.bukkit.utils.ColorUtils;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.config.annotation.ConfigPath;
 
@@ -15,6 +16,6 @@ public interface NgonConfig {
     }
 
     default String getNgonMessage() {
-        return MessageUtils.colorize("&u&lPlugin Ngon");
+        return ColorUtils.colorize("&u&lPlugin Ngon");
     }
 }
