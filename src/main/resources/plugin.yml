@@ -4,3 +4,4 @@ main: me.hsgamer.pluginngon.PluginNgon
 api-version: 1.13
 authors: [ HSGamer ]
 description: Plugin Ngon
+folia-supported: true
