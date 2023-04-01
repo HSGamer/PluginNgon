@@ -4,6 +4,8 @@ import me.hsgamer.hscore.bukkit.gui.BukkitGUIDisplay;
 import me.hsgamer.hscore.bukkit.gui.BukkitGUIHolder;
 import me.hsgamer.hscore.bukkit.scheduler.Scheduler;
 import me.hsgamer.hscore.bukkit.scheduler.Task;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
@@ -24,7 +26,8 @@ public class NgonInv extends BukkitGUIHolder {
     @Override
     public BukkitGUIDisplay newDisplay(UUID uuid) {
         BukkitGUIDisplay display = super.newDisplay(uuid);
-        updateTasks.put(uuid, Scheduler.CURRENT.runTaskTimer(getPlugin(), display::update, 0, 0, true));
+        Player player = Bukkit.getPlayer(uuid);
+        updateTasks.put(uuid, Scheduler.CURRENT.runEntityTaskTimer(getPlugin(), player, display::update, 0, 0, true));
         return display;
     }
 
