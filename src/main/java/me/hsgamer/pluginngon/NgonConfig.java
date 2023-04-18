@@ -9,7 +9,7 @@ public interface NgonConfig {
         return "Ngon";
     }
 
-    @ConfigPath("ngon")
+    @ConfigPath({"ngon", "plugin"})
     default long getNgonLong() {
         return 1000L / 20L;
     }
