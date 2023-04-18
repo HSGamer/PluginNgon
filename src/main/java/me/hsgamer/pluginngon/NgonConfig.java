@@ -4,7 +4,7 @@ import me.hsgamer.hscore.bukkit.utils.ColorUtils;
 import me.hsgamer.hscore.config.annotation.ConfigPath;
 
 public interface NgonConfig {
-    @ConfigPath("plugin")
+    @ConfigPath({"plugin", "ngon"})
     default String getNgon() {
         return "Ngon";
     }
