@@ -29,7 +29,7 @@ public final class PluginNgon extends BasePlugin {
         ngonInv.init();
         registerCommand(new NgonCommand(this));
         getLogger().info("Plugin: " + ngonConfig.getNgon());
-        ngonTask = Scheduler.CURRENT.runTaskTimer(this, ngonRunnable, 0, 20, false);
+        ngonTask = Scheduler.CURRENT.async().runTaskTimer(this, ngonRunnable, 0, 20);
     }
 
     @Override

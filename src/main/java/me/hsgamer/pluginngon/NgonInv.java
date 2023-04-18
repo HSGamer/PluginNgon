@@ -27,7 +27,7 @@ public class NgonInv extends BukkitGUIHolder {
     public BukkitGUIDisplay newDisplay(UUID uuid) {
         BukkitGUIDisplay display = super.newDisplay(uuid);
         Player player = Bukkit.getPlayer(uuid);
-        updateTasks.put(uuid, Scheduler.CURRENT.runEntityTaskTimer(getPlugin(), player, display::update, 0, 0, true));
+        updateTasks.put(uuid, Scheduler.CURRENT.async().runEntityTaskTimer(getPlugin(), player, display::update, 0, 0));
         return display;
     }
 
