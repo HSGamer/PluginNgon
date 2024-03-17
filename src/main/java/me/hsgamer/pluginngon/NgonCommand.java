@@ -28,10 +28,10 @@ public class NgonCommand extends Command {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if (!testPermissionSilent(sender) || !(sender instanceof Player)) {
-            MessageUtils.sendMessage(sender, pluginNgon.getNgonConfig().getNgonMessage());
+            MessageUtils.sendMessage(sender, pluginNgon.get(NgonConfig.class).getNgonMessage());
             return false;
         }
-        pluginNgon.getNgonInv().createDisplay(((Player) sender).getUniqueId()).open();
+        pluginNgon.get(NgonInv.class).createDisplay(((Player) sender).getUniqueId()).open();
         return true;
     }
 }
