@@ -53,6 +53,10 @@
                                     <pattern>com.cryptomorin.xseries</pattern>
                                     <shadedPattern>me.hsgamer.pluginngon.xseries</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>io.github.projectunified.minelib</pattern>
+                                    <shadedPattern>me.hsgamer.pluginngon.minelib</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
