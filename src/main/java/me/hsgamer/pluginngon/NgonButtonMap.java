@@ -1,20 +1,17 @@
 package me.hsgamer.pluginngon;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.hsgamer.hscore.bukkit.gui.object.BukkitItem;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
-import me.hsgamer.hscore.minecraft.gui.advanced.AdvancedButtonMap;
-import me.hsgamer.hscore.minecraft.gui.button.DisplayButton;
-import me.hsgamer.hscore.minecraft.gui.button.impl.AnimatedButton;
-import me.hsgamer.hscore.minecraft.gui.mask.MaskSlot;
-import me.hsgamer.hscore.minecraft.gui.mask.MaskUtils;
-import me.hsgamer.hscore.minecraft.gui.mask.impl.AnimatedMask;
-import me.hsgamer.hscore.minecraft.gui.mask.impl.ButtonMapMask;
-import me.hsgamer.hscore.minecraft.gui.mask.impl.MultiSlotsMask;
-import me.hsgamer.hscore.minecraft.gui.object.InventoryPosition;
-import org.bukkit.Bukkit;
+import me.hsgamer.hscore.minecraft.gui.button.AnimatedButton;
+import me.hsgamer.hscore.minecraft.gui.button.SimpleButton;
+import me.hsgamer.hscore.minecraft.gui.common.button.ButtonMap;
+import me.hsgamer.hscore.minecraft.gui.common.inventory.InventoryPosition;
+import me.hsgamer.hscore.minecraft.gui.common.item.ActionItem;
+import me.hsgamer.hscore.minecraft.gui.mask.AnimatedMask;
+import me.hsgamer.hscore.minecraft.gui.mask.HybridMask;
+import me.hsgamer.hscore.minecraft.gui.mask.MultiSlotsMask;
+import me.hsgamer.hscore.minecraft.gui.mask.util.MaskUtils;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -24,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NgonButtonMap extends AdvancedButtonMap {
+public class NgonButtonMap extends HybridMask {
     private final List<List<Integer>> slotsList = new ArrayList<>();
     private final NgonConfig config;
 
@@ -46,61 +43,58 @@ public class NgonButtonMap extends AdvancedButtonMap {
     }
 
     private void prepareMasks() {
-        addMask(
-                new MultiSlotsMask("default", MaskSlot.of(size -> MaskUtils.generateAreaSlots(InventoryPosition.of(0, 0), InventoryPosition.of(9, 6), size).boxed().collect(Collectors.toList())))
-                        .addButton(
-                                new AnimatedButton()
-                                        .setPeriodTicks(20)
-                                        .addButton(uuid -> {
-                                            ItemStack itemStack = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
-                                            ItemMeta itemMeta = itemStack.getItemMeta();
-                                            itemMeta.setDisplayName(config.getNgonMessage());
-                                            itemStack.setItemMeta(itemMeta);
+        MultiSlotsMask outlineMask = new MultiSlotsMask(context -> MaskUtils.generateOutlineSlots(InventoryPosition.of(0, 0), InventoryPosition.of(8, 4)).map(context::getSlot).collect(Collectors.toList()));
+        addMask(outlineMask);
 
-                                            return new DisplayButton()
-                                                    .setItem(new BukkitItem(itemStack))
-                                                    .setAction(event -> {
-                                                        Player player = Bukkit.getPlayer(event.getViewerID());
-                                                        if (player == null) return;
-                                                        MessageUtils.sendMessage(player, config.getNgonMessage());
-                                                    });
-                                        })
-                                        .addButton(uuid -> {
-                                            ItemStack itemStack = XMaterial.WHITE_STAINED_GLASS_PANE.parseItem();
-                                            ItemMeta itemMeta = itemStack.getItemMeta();
-                                            itemMeta.setDisplayName(config.getNgonMessage());
-                                            itemStack.setItemMeta(itemMeta);
-
-                                            return new DisplayButton()
-                                                    .setItem(new BukkitItem(itemStack))
-                                                    .setAction(event -> {
-                                                        Player player = Bukkit.getPlayer(event.getViewerID());
-                                                        if (player == null) return;
-                                                        MessageUtils.sendMessage(player, config.getNgonMessage());
-                                                    });
-                                        })
-                        )
+        AnimatedButton animatedButton = new AnimatedButton();
+        animatedButton.setPeriodMillis(1000);
+        animatedButton.addButton(
+                new SimpleButton(
+                        uuid -> {
+                            ItemStack itemStack = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            itemMeta.setDisplayName(config.getNgonMessage());
+                            itemStack.setItemMeta(itemMeta);
+                            return itemStack;
+                        },
+                        event -> {
+                            MessageUtils.sendMessage(event.getViewerID(), config.getNgonMessage());
+                        }
+                ),
+                new SimpleButton(
+                        uuid -> {
+                            ItemStack itemStack = XMaterial.WHITE_STAINED_GLASS_PANE.parseItem();
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            itemMeta.setDisplayName(config.getNgonMessage());
+                            itemStack.setItemMeta(itemMeta);
+                            return itemStack;
+                        },
+                        event -> {
+                            MessageUtils.sendMessage(event.getViewerID(), config.getNgonMessage());
+                        }
+                )
         );
+        outlineMask.addButton(animatedButton);
 
-        List<ButtonMapMask> frameMasks = new ArrayList<>();
+        List<ButtonMap> frameMasks = new ArrayList<>();
         slotsList.forEach(slots -> {
-            ButtonMapMask mask = new ButtonMapMask("plugin");
-            mask.addButton(uuid -> {
+            ButtonMap buttonMap = context -> {
                 ItemStack itemStack = new ItemStack(Material.BEDROCK);
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 itemMeta.setDisplayName(config.getNgonMessage());
                 itemStack.setItemMeta(itemMeta);
 
-                return new DisplayButton()
-                        .setItem(new BukkitItem(itemStack))
-                        .setAction(event -> {
-                            Player player = Bukkit.getPlayer(event.getViewerID());
-                            if (player == null) return;
-                            MessageUtils.sendMessage(player, config.getNgonMessage());
-                        });
-            }, slots);
-            frameMasks.add(mask);
+                ActionItem actionItem = new ActionItem()
+                        .setItem(itemStack)
+                        .setAction(event -> MessageUtils.sendMessage(event.getViewerID(), config.getNgonMessage()));
+
+                return slots.stream().collect(Collectors.toMap(slot -> slot, slot -> actionItem));
+            };
+            frameMasks.add(buttonMap);
         });
-        addMask(new AnimatedMask("plugin_animated").setPeriodMillis(config.getNgonLong()).addMask(frameMasks));
+        AnimatedMask animatedMask = new AnimatedMask();
+        animatedMask.addMask(frameMasks);
+        animatedMask.setPeriodMillis(config.getNgonLong());
+        addMask(animatedMask);
     }
 }

@@ -3,55 +3,71 @@ package me.hsgamer.pluginngon;
 import io.github.projectunified.minelib.plugin.base.Loadable;
 import io.github.projectunified.minelib.scheduler.common.task.Task;
 import io.github.projectunified.minelib.scheduler.entity.EntityScheduler;
-import me.hsgamer.hscore.bukkit.gui.BukkitGUIDisplay;
-import me.hsgamer.hscore.bukkit.gui.BukkitGUIHolder;
-import me.hsgamer.hscore.bukkit.gui.BukkitGUIListener;
+import me.hsgamer.hscore.bukkit.gui.holder.BukkitGUIHolder;
+import me.hsgamer.hscore.bukkit.gui.holder.listener.HolderBukkitInventoryListener;
+import me.hsgamer.hscore.minecraft.gui.common.button.ButtonMap;
+import me.hsgamer.hscore.minecraft.gui.holder.event.CloseEvent;
+import me.hsgamer.hscore.minecraft.gui.holder.event.OpenEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 
-public class NgonInv extends BukkitGUIHolder implements Loadable {
+public class NgonInv implements Loadable {
     private final Map<UUID, Task> updateTasks = new ConcurrentHashMap<>();
     private final Plugin plugin;
-    private Listener listener;
+    private final ButtonMap buttonMap;
+    private final HolderBukkitInventoryListener listener;
+    private final BiFunction<UUID, BukkitGUIHolder, Inventory> inventoryFunction;
 
     public NgonInv(Plugin plugin, NgonConfig config) {
-        super(plugin);
         this.plugin = plugin;
-        setTitleFunction(uuid -> config.getNgonMessage());
-        setButtonMap(new NgonButtonMap(config));
-        setSize(45);
+        this.buttonMap = new NgonButtonMap(config);
+        this.listener = new HolderBukkitInventoryListener(plugin);
+        this.inventoryFunction = listener.create(
+                uuid -> InventoryType.CHEST,
+                uuid -> 45,
+                uuid -> config.getNgonMessage()
+        );
     }
 
-    @Override
-    public BukkitGUIDisplay newDisplay(UUID uuid) {
-        BukkitGUIDisplay display = super.newDisplay(uuid);
-        Player player = Bukkit.getPlayer(uuid);
-        updateTasks.put(uuid, EntityScheduler.get(plugin, player).runTimer(display::update, 0, 0));
-        return display;
-    }
+    public BukkitGUIHolder createHolder(Player player) {
+        BukkitGUIHolder holder = new BukkitGUIHolder(player.getUniqueId(), inventoryFunction) {
+            @Override
+            public void handleOpen(OpenEvent event) {
+                super.handleOpen(event);
+                UUID uuid = event.getViewerID();
+                Player player = Bukkit.getPlayer(uuid);
+                updateTasks.put(uuid, EntityScheduler.get(plugin, player).runTimer(this::update, 0, 0));
+            }
 
-    @Override
-    protected void onRemoveDisplay(BukkitGUIDisplay display) {
-        super.onRemoveDisplay(display);
-        Optional.ofNullable(updateTasks.remove(display.getUniqueId())).ifPresent(Task::cancel);
+            @Override
+            public void handleClose(CloseEvent event) {
+                super.handleClose(event);
+                Optional.ofNullable(updateTasks.remove(event.getViewerID())).ifPresent(Task::cancel);
+            }
+        };
+        holder.setButtonMap(buttonMap);
+        holder.init();
+        return holder;
     }
 
     @Override
     public void enable() {
-        listener = BukkitGUIListener.init(plugin);
-        init();
+        listener.init();
+        buttonMap.init();
     }
 
     @Override
     public void disable() {
-        HandlerList.unregisterAll(listener);
+        buttonMap.stop();
+        listener.stop();
     }
 }

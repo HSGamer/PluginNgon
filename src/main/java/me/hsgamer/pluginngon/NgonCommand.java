@@ -31,7 +31,7 @@ public class NgonCommand extends Command {
             MessageUtils.sendMessage(sender, pluginNgon.get(NgonConfig.class).getNgonMessage());
             return false;
         }
-        pluginNgon.get(NgonInv.class).createDisplay(((Player) sender).getUniqueId()).open();
+        pluginNgon.get(NgonInv.class).createHolder(((Player) sender)).open();
         return true;
     }
 }
