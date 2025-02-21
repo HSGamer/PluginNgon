@@ -43,7 +43,7 @@ public class NgonButtonMap extends HybridMask {
     }
 
     private void prepareMasks() {
-        MultiSlotsMask outlineMask = new MultiSlotsMask(context -> MaskUtils.generateOutlineSlots(InventoryPosition.of(0, 0), InventoryPosition.of(8, 4)).map(context::getSlot).collect(Collectors.toList()));
+        MultiSlotsMask outlineMask = new MultiSlotsMask(context -> MaskUtils.generateOutlinePositions(InventoryPosition.of(0, 0), InventoryPosition.of(8, 4)).map(context::getSlot).collect(Collectors.toList()));
         addMask(outlineMask);
 
         AnimatedButton animatedButton = new AnimatedButton();
