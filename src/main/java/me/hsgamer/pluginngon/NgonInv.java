@@ -55,6 +55,7 @@ public class NgonInv implements Loadable {
             }
         };
         holder.setButtonMap(buttonMap);
+        holder.setMoveItemOnBottom(true);
         holder.init();
         return holder;
     }
