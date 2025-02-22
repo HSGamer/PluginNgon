@@ -6,12 +6,10 @@ import me.hsgamer.hscore.minecraft.gui.button.AnimatedButton;
 import me.hsgamer.hscore.minecraft.gui.button.SimpleButton;
 import me.hsgamer.hscore.minecraft.gui.common.button.ButtonMap;
 import me.hsgamer.hscore.minecraft.gui.common.inventory.InventoryPosition;
-import me.hsgamer.hscore.minecraft.gui.common.item.ActionItem;
 import me.hsgamer.hscore.minecraft.gui.mask.AnimatedMask;
 import me.hsgamer.hscore.minecraft.gui.mask.HybridMask;
 import me.hsgamer.hscore.minecraft.gui.mask.MultiSlotsMask;
 import me.hsgamer.hscore.minecraft.gui.mask.util.MaskUtils;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -78,18 +76,47 @@ public class NgonButtonMap extends HybridMask {
 
         List<ButtonMap> frameMasks = new ArrayList<>();
         slotsList.forEach(slots -> {
-            ButtonMap buttonMap = context -> {
-                ItemStack itemStack = new ItemStack(Material.BEDROCK);
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setDisplayName(config.getNgonMessage());
-                itemStack.setItemMeta(itemMeta);
-
-                ActionItem actionItem = new ActionItem()
-                        .setItem(itemStack)
-                        .setAction(event -> MessageUtils.sendMessage(event.getViewerID(), config.getNgonMessage()));
-
-                return slots.stream().collect(Collectors.toMap(slot -> slot, slot -> actionItem));
-            };
+//            ButtonMap buttonMap = context -> {
+//                ItemStack itemStack = new ItemStack(Material.BEDROCK);
+//                ItemMeta itemMeta = itemStack.getItemMeta();
+//                itemMeta.setDisplayName(config.getNgonMessage());
+//                itemStack.setItemMeta(itemMeta);
+//
+//                ActionItem actionItem = new ActionItem()
+//                        .setItem(itemStack)
+//                        .setAction(event -> MessageUtils.sendMessage(event.getViewerID(), config.getNgonMessage()));
+//
+//                return slots.stream().collect(Collectors.toMap(slot -> slot, slot -> actionItem));
+//            };
+            MultiSlotsMask buttonMap = new MultiSlotsMask(MaskUtils.createStaticMaskSlot(slots));
+            buttonMap.addButton(
+                    new SimpleButton(
+                            uuid -> {
+                                ItemStack itemStack = XMaterial.BEDROCK.parseItem();
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                itemMeta.setDisplayName(config.getNgonMessage());
+                                itemStack.setItemMeta(itemMeta);
+                                return itemStack;
+                            },
+                            event -> {
+                                MessageUtils.sendMessage(event.getViewerID(), config.getNgonMessage());
+                            }
+                    )
+            );
+            buttonMap.addButton(
+                    new SimpleButton(
+                            uuid -> {
+                                ItemStack itemStack = XMaterial.REDSTONE_BLOCK.parseItem();
+                                ItemMeta itemMeta = itemStack.getItemMeta();
+                                itemMeta.setDisplayName(config.getNgonMessage());
+                                itemStack.setItemMeta(itemMeta);
+                                return itemStack;
+                            },
+                            event -> {
+                                MessageUtils.sendMessage(event.getViewerID(), config.getNgonMessage());
+                            }
+                    )
+            );
             frameMasks.add(buttonMap);
         });
         AnimatedMask animatedMask = new AnimatedMask();
