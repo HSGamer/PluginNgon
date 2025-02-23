@@ -5,7 +5,6 @@ import io.github.projectunified.minelib.scheduler.common.task.Task;
 import io.github.projectunified.minelib.scheduler.entity.EntityScheduler;
 import me.hsgamer.hscore.bukkit.gui.holder.BukkitGUIHolder;
 import me.hsgamer.hscore.bukkit.gui.holder.listener.HolderBukkitInventoryListener;
-import me.hsgamer.hscore.minecraft.gui.common.button.ButtonMap;
 import me.hsgamer.hscore.minecraft.gui.holder.event.CloseEvent;
 import me.hsgamer.hscore.minecraft.gui.holder.event.OpenEvent;
 import org.bukkit.Bukkit;
@@ -18,14 +17,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class NgonInv implements Loadable {
     private final Map<UUID, Task> updateTasks = new ConcurrentHashMap<>();
     private final Plugin plugin;
-    private final ButtonMap buttonMap;
+    private final NgonButtonMap buttonMap;
     private final HolderBukkitInventoryListener listener;
-    private final BiFunction<UUID, BukkitGUIHolder, Inventory> inventoryFunction;
+    private final Function<BukkitGUIHolder, Inventory> inventoryFunction;
 
     public NgonInv(Plugin plugin, NgonConfig config) {
         this.plugin = plugin;
