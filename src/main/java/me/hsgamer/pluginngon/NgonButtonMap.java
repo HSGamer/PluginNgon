@@ -4,18 +4,18 @@ import com.cryptomorin.xseries.XMaterial;
 import me.hsgamer.hscore.bukkit.utils.MessageUtils;
 import me.hsgamer.hscore.minecraft.gui.button.AnimatedButton;
 import me.hsgamer.hscore.minecraft.gui.button.SimpleButton;
+import me.hsgamer.hscore.minecraft.gui.common.inventory.InventoryContext;
 import me.hsgamer.hscore.minecraft.gui.common.inventory.InventoryPosition;
-import me.hsgamer.hscore.minecraft.gui.mask.AnimatedMask;
+import me.hsgamer.hscore.minecraft.gui.common.item.ActionItem;
 import me.hsgamer.hscore.minecraft.gui.mask.HybridMask;
+import me.hsgamer.hscore.minecraft.gui.mask.MaskPaginatedMask;
 import me.hsgamer.hscore.minecraft.gui.mask.MultiSlotsMask;
 import me.hsgamer.hscore.minecraft.gui.mask.util.MaskUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class NgonButtonMap extends HybridMask {
@@ -40,7 +40,7 @@ public class NgonButtonMap extends HybridMask {
     }
 
     private void prepareMasks() {
-        MultiSlotsMask outlineMask = new MultiSlotsMask(MaskUtils.createPositionMaskSlot(MaskUtils.generateOutlinePositions(InventoryPosition.of(0, 0), InventoryPosition.of(8, 4)).collect(Collectors.toList())));
+        MultiSlotsMask outlineMask = new MultiSlotsMask(MaskUtils.createPositionSlots(MaskUtils.generateOutlinePositions(InventoryPosition.of(0, 0), InventoryPosition.of(8, 4)).collect(Collectors.toList())));
         add(outlineMask);
 
         AnimatedButton animatedButton = new AnimatedButton();
@@ -73,10 +73,8 @@ public class NgonButtonMap extends HybridMask {
         );
         outlineMask.add(animatedButton);
 
-        AnimatedMask animatedMask = new AnimatedMask();
-        animatedMask.setPeriodMillis(config.getNgonLong());
-        slotsList.forEach(slots -> {
-            MultiSlotsMask buttonMap = new MultiSlotsMask(MaskUtils.createStaticMaskSlot(slots));
+        List<Function<InventoryContext, Map<Integer, ActionItem>>> masks = slotsList.stream().map(slots -> {
+            MultiSlotsMask buttonMap = new MultiSlotsMask(MaskUtils.createStaticSlots(slots));
             buttonMap.add(
                     new SimpleButton(
                             uuid -> {
@@ -105,8 +103,19 @@ public class NgonButtonMap extends HybridMask {
                             }
                     )
             );
-            animatedMask.add(buttonMap);
-        });
+            return buttonMap;
+        }).collect(Collectors.toList());
+
+        MaskPaginatedMask animatedMask = new MaskPaginatedMask() {
+            @Override
+            public List<Function<InventoryContext, Map<Integer, ActionItem>>> getMasks(UUID uuid) {
+                return masks;
+            }
+        };
         add(animatedMask);
+
+        MultiSlotsMask nextPageMask = new MultiSlotsMask(MaskUtils.createBackgroundSlots());
+        nextPageMask.add(uuid -> new ActionItem().setAction(event -> animatedMask.nextPage(event.getViewerID())));
+        add(nextPageMask);
     }
 }
