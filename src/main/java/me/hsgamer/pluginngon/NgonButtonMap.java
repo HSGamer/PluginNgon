@@ -106,16 +106,17 @@ public class NgonButtonMap extends HybridMask {
             return buttonMap;
         }).collect(Collectors.toList());
 
-        MaskPaginatedMask animatedMask = new MaskPaginatedMask() {
+        MaskPaginatedMask pageMask = new MaskPaginatedMask() {
             @Override
             public List<Function<InventoryContext, Map<Integer, ActionItem>>> getMasks(UUID uuid) {
                 return masks;
             }
         };
-        add(animatedMask);
+        pageMask.setCycle(true);
+        add(pageMask);
 
         MultiSlotsMask nextPageMask = new MultiSlotsMask(MaskUtils.createBackgroundSlots());
-        nextPageMask.add(uuid -> new ActionItem().setAction(event -> animatedMask.nextPage(event.getViewerID())));
+        nextPageMask.add(uuid -> new ActionItem().setAction(event -> pageMask.nextPage(event.getViewerID())));
         add(nextPageMask);
     }
 }
