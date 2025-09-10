@@ -1,12 +1,11 @@
 package me.hsgamer.pluginngon;
 
 import io.github.projectunified.craftux.spigot.SpigotInventoryUI;
+import io.github.projectunified.craftux.spigot.SpigotInventoryUIListener;
 import io.github.projectunified.minelib.plugin.base.Loadable;
 import io.github.projectunified.minelib.scheduler.common.task.Task;
 import io.github.projectunified.minelib.scheduler.entity.EntityScheduler;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.plugin.Plugin;
@@ -21,12 +20,13 @@ public class NgonInv implements Loadable {
     private final Plugin plugin;
     private final NgonMask mask;
     private final String title;
-    private Listener listener;
+    private final SpigotInventoryUIListener listener;
 
     public NgonInv(Plugin plugin, NgonConfig config) {
         this.plugin = plugin;
         this.mask = new NgonMask(config);
         this.title = config.getNgonMessage();
+        this.listener = new SpigotInventoryUIListener(plugin);
     }
 
     public SpigotInventoryUI createInventory(Player player) {
@@ -49,12 +49,12 @@ public class NgonInv implements Loadable {
     @Override
     public void enable() {
         mask.init();
-        this.listener = SpigotInventoryUI.register(plugin);
+        listener.register();
     }
 
     @Override
     public void disable() {
         mask.stop();
-        HandlerList.unregisterAll(listener);
+        listener.unregister();
     }
 }
