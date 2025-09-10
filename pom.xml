@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.hsgamer</groupId>
     <artifactId>plugin-ngon</artifactId>
-    <version>4.0</version>
+    <version>5.0</version>
     <packaging>jar</packaging>
 
     <name>PluginNgon</name>
@@ -16,6 +16,7 @@
         <java.version>1.8</java.version>
         <core.version>4.6.0-SNAPSHOT</core.version>
         <minelib.version>1.2.0</minelib.version>
+        <craftux.version>1.0-SNAPSHOT</craftux.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -114,19 +115,19 @@
             <version>${minelib.version}</version>
         </dependency>
         <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>hscore-bukkit-gui-holder</artifactId>
-            <version>${core.version}</version>
+            <groupId>io.github.projectunified</groupId>
+            <artifactId>craftux-spigot</artifactId>
+            <version>${craftux.version}</version>
         </dependency>
         <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>hscore-minecraft-gui-button</artifactId>
-            <version>${core.version}</version>
+            <groupId>io.github.projectunified</groupId>
+            <artifactId>craftux-button</artifactId>
+            <version>${craftux.version}</version>
         </dependency>
         <dependency>
-            <groupId>me.hsgamer</groupId>
-            <artifactId>hscore-minecraft-gui-mask</artifactId>
-            <version>${core.version}</version>
+            <groupId>io.github.projectunified</groupId>
+            <artifactId>craftux-mask</artifactId>
+            <version>${craftux.version}</version>
         </dependency>
         <dependency>
             <groupId>me.hsgamer</groupId>

@@ -32,4 +32,9 @@ public final class PluginNgon extends BasePlugin {
             getLogger().info(Arrays.toString(entry.getKey()) + ": " + entry.getValue());
         }
     }
+
+    @Override
+    public void disable() {
+
+    }
 }
