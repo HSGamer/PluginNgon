@@ -6,6 +6,7 @@ import io.github.projectunified.minelib.plugin.base.Loadable;
 import io.github.projectunified.minelib.scheduler.common.task.Task;
 import io.github.projectunified.minelib.scheduler.entity.EntityScheduler;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.plugin.Plugin;
@@ -42,6 +43,12 @@ public class NgonInv implements Loadable {
             }
         };
         holder.setMask(mask);
+        holder.setDefaultButton((uuid, actionItem) -> {
+            if (actionItem.getAction() == null) {
+                actionItem.setAction(InventoryClickEvent.class, event -> mask.nextPage(event.getWhoClicked().getUniqueId()));
+            }
+            return true;
+        });
         holder.setMoveItemOnBottom(true);
         return holder;
     }

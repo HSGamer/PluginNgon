@@ -16,11 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class NgonMask extends HybridMask {
     private final List<List<Integer>> slotsList = new ArrayList<>();
     private final NgonConfig config;
+    private Consumer<UUID> nextPageConsumer;
 
     public NgonMask(NgonConfig config) {
         this.config = config;
@@ -114,13 +116,10 @@ public class NgonMask extends HybridMask {
         pageMask.setCycle(true);
         add(pageMask);
 
-        MultiPositionMask nextPageMask = new MultiPositionMask(uuid -> MaskUtils.generateAreaPositions(Position.of(0, 0), Position.of(8, 4)));
-        nextPageMask.add((uuid, actionItem) -> {
-            if (actionItem.getAction() == null) {
-                actionItem.setAction(InventoryClickEvent.class, event -> pageMask.nextPage(event.getWhoClicked().getUniqueId()));
-            }
-            return true;
-        });
-        add(nextPageMask);
+        nextPageConsumer = pageMask::nextPage;
+    }
+
+    public void nextPage(UUID uuid) {
+        if (nextPageConsumer != null) nextPageConsumer.accept(uuid);
     }
 }
